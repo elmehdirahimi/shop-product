@@ -1,0 +1,56 @@
+<div class="card p-4">
+    <h1 class="text-3xl mb-4">Contact</h1>
+
+    <form [formGroup]="contactForm" (ngSubmit)="onSubmit()" class="flex flex-column gap-4">
+        <div class="flex flex-column gap-2">
+            <label for="email">Email *</label>
+            <input
+                id="email"
+                type="email"
+                pInputText
+                formControlName="email"
+                [ngClass]="{'ng-invalid ng-dirty': contactForm.get('email')?.invalid && contactForm.get('email')?.touched}"
+            />
+            @if (contactForm.get('email')?.invalid && contactForm.get('email')?.touched) {
+                <small class="text-red-500">
+                    Email invalide
+                </small>
+            }
+        </div>
+
+        <div class="flex flex-column gap-2">
+            <label for="message">Message * (300 caractères max)</label>
+            <textarea
+                id="message"
+                pInputTextarea
+                formControlName="message"
+                [rows]="5"
+                [ngClass]="{'ng-invalid ng-dirty': contactForm.get('message')?.invalid && contactForm.get('message')?.touched}"
+            ></textarea>
+            @if (contactForm.get('message')?.invalid && contactForm.get('message')?.touched) {
+                <small class="text-red-500">
+                    @if (contactForm.get('message')?.errors?.['required']) {
+                        Le message est requis
+                    }
+                    @if (contactForm.get('message')?.errors?.['maxlength']) {
+                        Le message ne doit pas dépasser 300 caractères
+                    }
+                </small>
+            }
+            <small class="text-500">
+                {{ contactForm.get('message')?.value?.length || 0 }}/300
+            </small>
+        </div>
+
+        <div>
+            <p-button
+                type="submit"
+                label="Envoyer"
+                icon="pi pi-send"
+                [disabled]="contactForm.invalid"
+            />
+        </div>
+    </form>
+</div>
+
+<p-toast />

@@ -1,0 +1,51 @@
+<p-overlayPanel #op>
+    <div class="cart-items">
+        @if (cartItems.length === 0) {
+            <p class="text-center">Votre panier est vide</p>
+        } @else {
+            @for (item of cartItems; track item.id) {
+                <div class="flex justify-content-between align-items-center mb-2">
+                    <div>
+                        <span class="font-bold">{{ item.name }}</span>
+                        <div class="text-sm text-500">
+                            {{ item.price | currency:'EUR':'symbol':'1.2-2' }}
+                        </div>
+                    </div>
+                    <div class="flex align-items-center gap-2">
+                        <p-inputNumber
+                            [showButtons]="true"
+                            buttonLayout="horizontal"
+                            [min]="1"
+                            [size]="1"
+                            [ngModel]="item.quantity"
+                            (ngModelChange)="updateQuantity(item.id, $event)"
+                            inputStyleClass="w-3rem"
+                            decrementButtonClass="p-button-danger"
+                            incrementButtonClass="p-button-success">
+                        </p-inputNumber>
+
+                        <p-button
+                            icon="pi pi-trash"
+                            severity="danger"
+                            (onClick)="removeItem(item.id)"
+                            size="small"/>
+                    </div>
+                </div>
+            }
+            <div class="flex justify-content-between align-items-center mt-3 pt-3 border-top-1">
+                <span class="font-bold">Total:</span>
+                <span class="font-bold">{{ total() | currency:'EUR':'symbol':'1.2-2' }}</span>
+            </div>
+        }
+    </div>
+</p-overlayPanel>
+
+<div class="relative">
+    <i class="pi pi-shopping-cart cursor-pointer"
+       (click)="togglePanel($event)"
+       pBadge
+       [value]="cartCount()"
+       [severity]="cartCount() === 0 ? 'danger' : 'success'"
+       style="font-size: 2rem">
+    </i>
+</div>
